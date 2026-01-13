@@ -4,10 +4,10 @@ import path from 'path';
 
 export default defineConfig(({ mode }) => {
 	const env = loadEnv(mode, process.cwd(), '');
-
-	const apiUrl = env.VITE_API_URL || 'http://localhost:5000';
+	const API_URL = env.VITE_API_URL || 'http://localhost:5000';
 
 	return {
+		base: '/',
 		plugins: [react()],
 		resolve: {
 			alias: {
@@ -17,13 +17,19 @@ export default defineConfig(({ mode }) => {
 		server: {
 			host: '0.0.0.0',
 			port: 3000,
-			proxy: {
-				'/api': {
-					target: apiUrl,
-					changeOrigin: true,
-					rewrite: (p) => p.replace(/^\/api/, ''),
-				},
-			},
+			proxy:
+				mode === 'development'
+					? {
+							'/api': {
+								target: API_URL,
+								changeOrigin: true,
+								rewrite: (p) => p.replace(/^\/api/, ''),
+							},
+						}
+					: undefined,
+		},
+		define: {
+			'import.meta.env.VITE_API_URL': JSON.stringify(API_URL),
 		},
 	};
 });

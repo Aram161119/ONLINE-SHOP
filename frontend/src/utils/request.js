@@ -1,5 +1,9 @@
+const API_URL = import.meta.env.VITE_API_URL;
+
 export const request = async (endpoint, method = 'GET', body = null) => {
-	const url = `/api/${endpoint}`;
+	const apiUrl = API_URL || 'http://localhost:5000';
+
+	const url = `${apiUrl}/${endpoint}`;
 
 	const options = {
 		method,
