@@ -1,6 +1,5 @@
 import { userApi } from '@/api';
 import { ACTION_TYPE } from './action-type';
-import { setLoading } from '@/redux/actions';
 
 export const setUsers = (users, lastPage) => ({
 	type: ACTION_TYPE.SET_USERS,
@@ -27,23 +26,17 @@ export const setUserError = (message) => ({
 	payload: message,
 });
 
-export const fetchUsers =
-	(filters, showLoading = true) =>
-	async (dispatch) => {
-		if (showLoading) dispatch(setLoading(true));
+export const fetchUsers = (filters) => async (dispatch) => {
+	try {
+		const {
+			data: { lastPage, users },
+		} = await userApi.getAll(filters);
 
-		try {
-			const {
-				data: { lastPage, users },
-			} = await userApi.getAll(filters);
-
-			dispatch(setUsers(users, lastPage));
-		} catch (err) {
-			dispatch(setUserError(err?.message || 'Failed to load users'));
-		} finally {
-			if (showLoading) dispatch(setLoading(false));
-		}
-	};
+		dispatch(setUsers(users, lastPage));
+	} catch (err) {
+		dispatch(setUserError(err?.message || 'Failed to load users'));
+	}
+};
 
 export const createUser = (payload) => async (dispatch) => {
 	try {

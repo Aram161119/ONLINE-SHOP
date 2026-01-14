@@ -2,7 +2,7 @@ import { Container } from '@mui/material';
 import { useEffect, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { buildQueryParams } from '@/builders';
-import { selectLoading, selectProductsError } from '@/redux/selectors';
+import { selectProductLoading, selectProductsError } from '@/redux/selectors';
 import { fetchProducts, fetchCategories } from '@/redux/actions';
 import { Filters, ProductsGrid } from '../components';
 import { initialFilters } from '@/constants';
@@ -13,7 +13,7 @@ export const Catalog = () => {
 	const [filters, setFilters] = useState(initialFilters);
 
 	const dispatch = useDispatch();
-	const isLoading = useSelector(selectLoading);
+	const isLoading = useSelector(selectProductLoading);
 	const error = useSelector(selectProductsError);
 
 	const [debouncedSearch, resetDebouncedSearch] = useDebounce(filters.search, 800);
@@ -28,7 +28,7 @@ export const Catalog = () => {
 	}, [filters, debouncedSearch]);
 
 	useEffect(() => {
-		dispatch(fetchProducts(queryParams), false);
+		dispatch(fetchProducts(queryParams));
 	}, [dispatch, queryParams]);
 
 	useEffect(() => {

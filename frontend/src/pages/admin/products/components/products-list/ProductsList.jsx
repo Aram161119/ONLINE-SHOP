@@ -8,6 +8,7 @@ import {
 	Paper,
 	Pagination,
 	Typography,
+	CircularProgress,
 } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
 import {
@@ -15,6 +16,7 @@ import {
 	selectProducts,
 	selectProductsLastPage,
 	selectProductsError,
+	selectProductLoading,
 } from '@/redux/selectors';
 import { ProductRow } from './components';
 import { useNotification } from '@/context';
@@ -35,6 +37,7 @@ export const ProductsList = ({ filters, setFilters }) => {
 	const products = useSelector(selectProducts);
 	const lastPage = useSelector(selectProductsLastPage);
 	const categories = useSelector(selectCategories);
+	const isLoading = useSelector(selectProductLoading);
 
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
@@ -151,10 +154,16 @@ export const ProductsList = ({ filters, setFilters }) => {
 						</TableRow>
 					</TableHead>
 
-					{products.length === 0 && (
-						<caption>
-							<EmptyProducts />
+					{isLoading ? (
+						<caption style={{ textAlign: 'center' }}>
+							<CircularProgress />
 						</caption>
+					) : (
+						products.length === 0 && (
+							<caption>
+								<EmptyProducts />
+							</caption>
+						)
 					)}
 
 					<TableBody>

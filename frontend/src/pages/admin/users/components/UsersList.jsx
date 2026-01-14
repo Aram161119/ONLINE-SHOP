@@ -5,6 +5,7 @@ import {
 	TableContainer,
 	TableHead,
 	TableRow,
+	CircularProgress,
 	Paper,
 	Pagination,
 	Button,
@@ -16,7 +17,12 @@ import {
 import { DeleteModal } from '@/components';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { selectUser, selectUsers, selectUsersLastPage } from '@/redux/selectors';
+import {
+	selectUser,
+	selectUsers,
+	selectUsersLastPage,
+	selectUserLoading,
+} from '@/redux/selectors';
 import { useNotification } from '@/context';
 import { removeUser, editUser } from '@/redux/actions';
 import { useDispatch } from 'react-redux';
@@ -36,6 +42,7 @@ export const UsersList = ({ filters, setFilters, roles }) => {
 	const currentUser = useSelector(selectUser);
 	const users = useSelector(selectUsers);
 	const lastPage = useSelector(selectUsersLastPage);
+	const isLoading = useSelector(selectUserLoading);
 
 	const { success, error: showError } = useNotification();
 
@@ -151,7 +158,7 @@ export const UsersList = ({ filters, setFilters, roles }) => {
 		},
 		{ id: 'createdAt', label: 'Created at' },
 	];
-
+	console.log(isLoading, users.length);
 	return (
 		<TableContainer
 			component={Paper}
@@ -180,13 +187,17 @@ export const UsersList = ({ filters, setFilters, roles }) => {
 							<MuiTableCell align="right">Actions</MuiTableCell>
 						</TableRow>
 					</TableHead>
-
-					{users.length === 0 && (
-						<caption>
-							<EmptyUsers />
+					{isLoading ? (
+						<caption style={{ textAlign: 'center' }}>
+							<CircularProgress />
 						</caption>
+					) : (
+						users.length === 0 && (
+							<caption>
+								<EmptyUsers />
+							</caption>
+						)
 					)}
-
 					<TableBody>
 						{users.map((user) => (
 							<TableRow key={user.id} hover>

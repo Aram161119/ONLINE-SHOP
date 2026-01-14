@@ -1,6 +1,5 @@
 import { productApi } from '@/api';
 import { ACTION_TYPE } from './action-type';
-import { setLoading } from '@/redux/actions';
 
 export const setProducts = (products, lastPage) => ({
 	type: ACTION_TYPE.SET_PRODUCTS,
@@ -27,23 +26,17 @@ export const setProductError = (message) => ({
 	payload: message,
 });
 
-export const fetchProducts =
-	(filters, showLoading = true) =>
-	async (dispatch) => {
-		if (showLoading) dispatch(setLoading(true));
+export const fetchProducts = (filters) => async (dispatch) => {
+	try {
+		const {
+			data: { lastPage, products },
+		} = await productApi.getAll(filters);
 
-		try {
-			const {
-				data: { lastPage, products },
-			} = await productApi.getAll(filters);
-
-			dispatch(setProducts(products, lastPage));
-		} catch (err) {
-			dispatch(setProductError(err?.message || 'Failed to load products'));
-		} finally {
-			if (showLoading) dispatch(setLoading(false));
-		}
-	};
+		dispatch(setProducts(products, lastPage));
+	} catch (err) {
+		dispatch(setProductError(err?.message || 'Failed to load products'));
+	}
+};
 
 export const createProduct = (payload) => async (dispatch) => {
 	try {

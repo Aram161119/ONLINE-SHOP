@@ -27,7 +27,7 @@ export const Products = () => {
 	}, [filters, debouncedSearch]);
 
 	useEffect(() => {
-		dispatch(fetchProducts(queryParams), false);
+		dispatch(fetchProducts(queryParams), true);
 	}, [dispatch, queryParams]);
 
 	useEffect(() => {

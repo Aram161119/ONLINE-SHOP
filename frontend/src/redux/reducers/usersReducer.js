@@ -5,6 +5,7 @@ const initialState = {
 	byId: {},
 	lastPage: 1,
 	error: null,
+	isLoading: true,
 };
 
 export const usersReducer = (state = initialState, action) => {
@@ -26,6 +27,7 @@ export const usersReducer = (state = initialState, action) => {
 				byId,
 				lastPage,
 				error: null,
+				isLoading: false,
 			};
 		}
 
@@ -42,6 +44,7 @@ export const usersReducer = (state = initialState, action) => {
 					...state.byId,
 				},
 				error: null,
+				isLoading: false,
 			};
 		}
 
@@ -55,6 +58,7 @@ export const usersReducer = (state = initialState, action) => {
 				list: state.list.filter((id) => id !== userId),
 				byId: restById,
 				error: null,
+				isLoading: false,
 			};
 		}
 
@@ -77,6 +81,7 @@ export const usersReducer = (state = initialState, action) => {
 			return {
 				...state,
 				error: action.payload,
+				isLoading: false,
 			};
 
 		default:
