@@ -32,7 +32,7 @@ export const Catalog = () => {
 	}, [dispatch, queryParams]);
 
 	useEffect(() => {
-		dispatch(fetchCategories(), false);
+		dispatch(fetchCategories());
 	}, []);
 
 	const handlePageChange = (value) => {

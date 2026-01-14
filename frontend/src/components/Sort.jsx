@@ -7,7 +7,7 @@ export const Sort = ({ value, onChange, items, sx }) => (
 		<Select value={value} label="Sort by" onChange={onChange}>
 			<MenuItem value="">None</MenuItem>
 
-			{items.map((item) => (
+			{items?.map((item) => (
 				<MenuItem key={item.value} value={item.value}>
 					{item.name}
 				</MenuItem>

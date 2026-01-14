@@ -28,18 +28,14 @@ export const setCategoryError = (message) => ({
 });
 
 export const fetchCategories =
-	(filters = '', showLoading = true) =>
+	(filters = '') =>
 	async (dispatch) => {
-		if (showLoading) dispatch(setLoading(true));
-
 		try {
 			const { data } = await categoryApi.getAll(filters);
 
 			dispatch(setCategories(data));
 		} catch (err) {
 			dispatch(setCategoryError(err?.message || 'Failed to load categories'));
-		} finally {
-			if (showLoading) dispatch(setLoading(false));
 		}
 	};
 

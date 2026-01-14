@@ -38,7 +38,7 @@ export const Categories = () => {
 	}, [filters, debouncedSearch]);
 
 	useEffect(() => {
-		dispatch(fetchCategories(queryParams), false);
+		dispatch(fetchCategories(queryParams));
 	}, [dispatch, queryParams]);
 
 	const handleOpenCreateOrEditModal = (category = null) => {

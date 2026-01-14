@@ -15,8 +15,8 @@ export const ActiveSelectWithPopover = ({ name, options, selectedValues, onChang
 
 	const handleCheckboxChange = (value) => {
 		let newSelected;
-		if (selectedValues.includes(value)) {
-			newSelected = selectedValues.filter((v) => v !== value);
+		if (selectedValues?.includes(value)) {
+			newSelected = selectedValues?.filter((v) => v !== value);
 		} else {
 			newSelected = [...selectedValues, value];
 		}
@@ -49,12 +49,12 @@ export const ActiveSelectWithPopover = ({ name, options, selectedValues, onChang
 				}}
 			>
 				<FormGroup sx={{ m: 1, width: 250 }}>
-					{options.map((option) => (
+					{options?.map((option) => (
 						<FormControlLabel
 							key={option.id}
 							control={
 								<Checkbox
-									checked={selectedValues.includes(option.id)}
+									checked={selectedValues?.includes(option.id)}
 									onChange={() => handleCheckboxChange(option.id)}
 								/>
 							}

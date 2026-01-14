@@ -31,7 +31,7 @@ export const Products = () => {
 	}, [dispatch, queryParams]);
 
 	useEffect(() => {
-		dispatch(fetchCategories(), false);
+		dispatch(fetchCategories());
 	}, []);
 
 	const onClear = () => {

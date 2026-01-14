@@ -55,8 +55,9 @@ export const CreateProductModal = ({ open, onClose }) => {
 		handleSubmit,
 		control,
 		reset,
-		formState: { errors },
+		formState: { errors, isSubmitting, isValid },
 	} = useForm({
+		mode: 'onChange',
 		resolver: yupResolver(schema),
 		defaultValues: {
 			title: '',
@@ -201,7 +202,12 @@ export const CreateProductModal = ({ open, onClose }) => {
 
 			<DialogActions>
 				<Button onClick={handleClose}>Cancel</Button>
-				<Button type="submit" form="create-product-form" variant="contained">
+				<Button
+					disabled={!isValid || isSubmitting}
+					type="submit"
+					form="create-product-form"
+					variant="contained"
+				>
 					Save Product
 				</Button>
 			</DialogActions>

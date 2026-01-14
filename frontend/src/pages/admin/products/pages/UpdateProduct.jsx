@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useNavigationType } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -29,9 +29,16 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNotification } from '@/context';
 import { ImageUploader } from '@/components';
 import { buildFormData } from '@/builders';
-import { editProduct } from '@/redux/actions';
+import { editProduct, fetchProductById, fetchCategories } from '@/redux/actions';
 import { selectLoading, selectCategories, selectProductById } from '@/redux/selectors';
 import { PRICE_RANGE } from '@/constants';
+
+const TEXT_FIELDS = [
+	{ name: 'title', label: 'Title' },
+	{ name: 'characters', label: 'Characters' },
+	{ name: 'description', label: 'Description', multiline: true, rows: 3 },
+	{ name: 'price', label: 'Price', type: 'number' },
+];
 
 const schema = yup.object({
 	title: yup.string().required('Title is required'),
@@ -50,6 +57,8 @@ const schema = yup.object({
 export const UpdateProduct = () => {
 	const { id } = useParams();
 	const navigate = useNavigate();
+	const navigationType = useNavigationType();
+
 	const dispatch = useDispatch();
 	const isLoading = useSelector(selectLoading);
 
@@ -63,10 +72,27 @@ export const UpdateProduct = () => {
 		handleSubmit,
 		control,
 		reset,
-		formState: { errors },
+		formState: { errors, isSubmitting, isValid },
 	} = useForm({
+		mode: 'onChange',
 		resolver: yupResolver(schema),
 	});
+
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				await dispatch(fetchProductById(id));
+				await dispatch(fetchCategories());
+			} catch (err) {
+				showError('Product not found!');
+				navigate('/catalog');
+			}
+		};
+
+		if (navigationType !== 'PUSH') {
+			fetchData();
+		}
+	}, []);
 
 	useEffect(() => {
 		if (product) {
@@ -97,14 +123,13 @@ export const UpdateProduct = () => {
 		}
 	};
 
-	if (isLoading)
+	if (isLoading) {
 		return (
 			<Box display="flex" justifyContent="center" mt={7}>
 				<CircularProgress />
 			</Box>
 		);
-
-	const textFieldsArray = ['title', 'characters', 'description', 'price'];
+	}
 
 	if (!product) return null;
 
@@ -149,22 +174,20 @@ export const UpdateProduct = () => {
 							</Typography>
 						)}
 					</Grid>
-
-					{textFieldsArray.map((field) => (
+					{TEXT_FIELDS.map(({ name, label, type, multiline, rows }) => (
 						<TextField
-							key={field}
-							label={field.charAt(0).toUpperCase() + field.slice(1)}
+							key={name}
+							label={label}
 							fullWidth
 							margin="normal"
-							type={field === 'price' ? 'number' : 'text'}
-							multiline={field === 'description'}
-							minRows={field === 'description' ? 3 : undefined}
-							{...register(field)}
-							error={!!errors[field]}
-							helperText={errors[field]?.message}
+							type={type || 'text'}
+							multiline={multiline}
+							minRows={rows}
+							{...register(name)}
+							error={!!errors[name]}
+							helperText={errors[name]?.message}
 						/>
 					))}
-
 					<FormControl fullWidth margin="normal" error={!!errors.category}>
 						<InputLabel>Category</InputLabel>
 						<Controller
@@ -193,9 +216,7 @@ export const UpdateProduct = () => {
 							</Typography>
 						)}
 					</FormControl>
-
 					<Divider sx={{ my: 3 }} />
-
 					<Box mb={3}>
 						<Typography variant="h6">Likes</Typography>
 						<Typography
@@ -215,7 +236,6 @@ export const UpdateProduct = () => {
 								: product.likes || 0}
 						</Typography>
 					</Box>
-
 					<Box mb={3}>
 						<Typography variant="h6">Comments</Typography>
 						{product.comments.length === 0 ? (
@@ -235,15 +255,14 @@ export const UpdateProduct = () => {
 							</List>
 						)}
 					</Box>
-
 					<Button
 						type="submit"
 						variant="contained"
 						fullWidth
 						sx={{ py: 1.5 }}
-						disabled={isLoading}
+						disabled={!isValid || isSubmitting}
 					>
-						Save Changes
+						{isSubmitting ? <CircularProgress size={22} /> : 'Save Changes'}
 					</Button>
 				</form>
 			</Paper>
