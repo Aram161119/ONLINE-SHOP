@@ -67,13 +67,17 @@ export const CommentsBlock = ({ productId, comments }) => {
 									)}
 								</Box>
 
-								<IconButton
-									color="error"
-									disabled={user.email !== comment.author || !isAuth}
-									onClick={() => handleCommentDelete(comment.id)}
-								>
-									<DeleteIcon />
-								</IconButton>
+								{isAuth && (
+									<IconButton
+										color="error"
+										disabled={
+											user?.email !== comment.author || !isAuth
+										}
+										onClick={() => handleCommentDelete(comment.id)}
+									>
+										<DeleteIcon />
+									</IconButton>
+								)}
 							</Box>
 						}
 						secondaryTypographyProps={{

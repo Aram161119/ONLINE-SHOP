@@ -55,7 +55,7 @@ export const ProductView = () => {
 
 	const isInCart = cartItems.some((item) => item.id === id);
 	const cartItem = cartItems.find((item) => item.id === id);
-	const isLiked = product?.likes?.some((l) => l.user === user.email);
+	const isLiked = product?.likes?.some((l) => l.user === user?.email);
 	const commentsCount = product?.comments?.length || 0;
 
 	const handleLikeClick = () => dispatch(likeAndUpdateProduct(id));
