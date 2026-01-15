@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Navigate, Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import { Box, Button, TextField, Typography, Link } from '@mui/material';
-import { login } from '@/redux/actions';
+import { login, fetchCart } from '@/redux/actions';
 import { useNotification } from '@/context';
 
 const authFormSchema = yup.object().shape({
@@ -50,6 +50,7 @@ export const Login = () => {
 			const returnPath = location?.state?.from?.pathname || '/';
 			navigate(returnPath, { replace: true });
 
+			dispatch(fetchCart());
 			success('Successfully registered!');
 		} catch (err) {
 			showError(err.message || 'Something went wrong!');

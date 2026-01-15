@@ -192,7 +192,7 @@ export const UpdateProduct = () => {
 							type={type || 'text'}
 							multiline={multiline}
 							minRows={rows}
-							inputProps={{ step: '0.01' }}
+							inputProps={{ step: step }}
 							{...register(name)}
 							error={!!errors[name]}
 							helperText={errors[name]?.message}

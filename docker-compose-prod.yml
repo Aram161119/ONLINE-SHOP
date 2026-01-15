@@ -12,7 +12,7 @@ services:
     env_file:
       - ./backend/.env
     volumes:
-      - /var/www/online-shop/uploads:/app/public/uploads
+      - /var/www/online-shop/uploads:/app/uploads
   frontend:
     build:
       context: ./frontend

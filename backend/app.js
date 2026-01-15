@@ -7,6 +7,7 @@ const routes = require("./routes");
 const errorHandler = require("./middlewares/errorHandler");
 const autoAsyncHandler = require("./handlers/autoAsyncHandler");
 const connectDB = require("./db");
+const path = require("path");
 
 const app = express();
 
@@ -32,7 +33,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/uploads", express.static("uploads"));
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
 app.get("/health", (req, res) => {
   res.status(200).json({
