@@ -37,7 +37,7 @@ const TEXT_FIELDS = [
 	{ name: 'title', label: 'Title' },
 	{ name: 'characters', label: 'Characters' },
 	{ name: 'description', label: 'Description', multiline: true, rows: 3 },
-	{ name: 'price', label: 'Price', type: 'number' },
+	{ name: 'price', label: 'Price', type: 'number', step: '0.01' },
 ];
 
 const schema = yup.object({
@@ -45,8 +45,11 @@ const schema = yup.object({
 	description: yup.string().required('Description is required'),
 	price: yup
 		.number()
+		.transform((value, originalValue) =>
+			originalValue === '' ? undefined : Number(originalValue),
+		)
 		.typeError('Price must be a number')
-		.min(PRICE_RANGE.min, `Price must be at least ${PRICE_RANGE.min}`)
+		.min(0.01, 'Price must be at least 0.01')
 		.max(PRICE_RANGE.max, `Price must be at most ${PRICE_RANGE.max}`)
 		.required('Price is required'),
 	characters: yup.string().required('Characters are required'),
@@ -84,7 +87,7 @@ export const UpdateProduct = () => {
 				await dispatch(fetchProductById(id));
 				await dispatch(fetchCategories());
 			} catch (err) {
-				showError('Product not found!');
+				showError(err?.message || 'Product not found!');
 				navigate('/catalog');
 			}
 		};
@@ -118,6 +121,12 @@ export const UpdateProduct = () => {
 
 			success('Product updated successfully!');
 			if (updatedProduct.image) reset({ ...data, image: updatedProduct.image });
+
+			window.scrollTo({
+				top: 0,
+				left: 0,
+				behavior: 'smooth',
+			});
 		} catch (err) {
 			showError(err.message || 'Failed to update product');
 		}
@@ -164,7 +173,7 @@ export const UpdateProduct = () => {
 									}
 									onChange={field.onChange}
 									width="100%"
-									height={400}
+									height={'400px'}
 								/>
 							)}
 						/>
@@ -174,7 +183,7 @@ export const UpdateProduct = () => {
 							</Typography>
 						)}
 					</Grid>
-					{TEXT_FIELDS.map(({ name, label, type, multiline, rows }) => (
+					{TEXT_FIELDS.map(({ name, label, type, multiline, rows, step }) => (
 						<TextField
 							key={name}
 							label={label}
@@ -183,6 +192,7 @@ export const UpdateProduct = () => {
 							type={type || 'text'}
 							multiline={multiline}
 							minRows={rows}
+							inputProps={{ step: '0.01' }}
 							{...register(name)}
 							error={!!errors[name]}
 							helperText={errors[name]?.message}

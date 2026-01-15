@@ -76,13 +76,16 @@ export const ProductView = () => {
 
 	return (
 		<Container maxWidth="lg">
-			<Paper sx={{ p: 4, borderRadius: 3, mt: 4 }}>
+			<Paper sx={{ p: 4, borderRadius: 3 }}>
 				<Box
 					display="flex"
 					justifyContent="space-between"
 					alignItems="center"
 					mb={3}
 				>
+					<Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+						{product.title}
+					</Typography>
 					<Tooltip title="Back" arrow>
 						<IconButton
 							onClick={() => navigate(-1)}
@@ -91,10 +94,6 @@ export const ProductView = () => {
 							<KeyboardBackspaceIcon sx={{ width: 36, height: 36 }} />
 						</IconButton>
 					</Tooltip>
-					<Typography variant="h4" sx={{ fontWeight: 'bold' }}>
-						{product.title}
-					</Typography>
-					<Box />
 				</Box>
 
 				<Grid container spacing={4}>
@@ -128,8 +127,8 @@ export const ProductView = () => {
 								src={product.image}
 								alt={product.title}
 								sx={{
-									width: '100%',
-									height: 'auto',
+									width: '300px',
+									height: '300px',
 									borderRadius: 2,
 									objectFit: 'cover',
 								}}
