@@ -1,1 +1,12 @@
 **/node_modules
+**/dist
+**/.npm
+**/.cache
+**/.git
+**/.gitignore
+**/Dockerfile
+docker-compose-dev.yml
+docker-compose-prod.yml
+npm-debug.log
+**/.env
+**/.env.*
