@@ -1,6 +1,5 @@
 import { categoryApi } from '@/api';
 import { ACTION_TYPE } from './action-type';
-import { setLoading } from '@/redux/actions';
 
 export const setCategories = (categories) => ({
 	type: ACTION_TYPE.SET_CATEGORIES,
@@ -27,9 +26,16 @@ export const setCategoryError = (message) => ({
 	payload: message,
 });
 
+export const setCategoryLoading = (isLoading) => ({
+	type: ACTION_TYPE.SET_CATEGORY_LOADING,
+	payload: isLoading,
+});
+
 export const fetchCategories =
 	(filters = '') =>
 	async (dispatch) => {
+		dispatch(setCategoryLoading(true));
+
 		try {
 			const { data } = await categoryApi.getAll(filters);
 
@@ -40,6 +46,8 @@ export const fetchCategories =
 	};
 
 export const createCategory = (payload) => async (dispatch) => {
+	dispatch(setCategoryLoading(true));
+
 	try {
 		const { data } = await categoryApi.create(payload);
 
@@ -52,6 +60,8 @@ export const createCategory = (payload) => async (dispatch) => {
 };
 
 export const editCategory = (id, payload) => async (dispatch) => {
+	dispatch(setCategoryLoading(true));
+
 	try {
 		const { data } = await categoryApi.update(id, payload);
 		dispatch(updateCategory(data));
@@ -63,6 +73,8 @@ export const editCategory = (id, payload) => async (dispatch) => {
 };
 
 export const removeCategory = (id) => async (dispatch) => {
+	dispatch(setCategoryLoading(true));
+
 	try {
 		await categoryApi.delete(id);
 		dispatch(deleteCategory(id));

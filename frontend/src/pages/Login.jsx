@@ -1,11 +1,18 @@
 import { AuthFormError } from '@/components';
-import { selectIsAuth, selectAuthError } from '@/redux/selectors';
+import { selectIsAuth, selectAuthError, selectLoading } from '@/redux/selectors';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { Navigate, Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
-import { Box, Button, TextField, Typography, Link } from '@mui/material';
+import {
+	Box,
+	Button,
+	TextField,
+	Typography,
+	Link,
+	CircularProgress,
+} from '@mui/material';
 import { login, fetchCart } from '@/redux/actions';
 import { useNotification } from '@/context';
 
@@ -29,6 +36,7 @@ export const Login = () => {
 	const location = useLocation();
 	const isAuth = useSelector(selectIsAuth);
 	const authError = useSelector(selectAuthError);
+	const isLoading = useSelector(selectLoading);
 
 	const { error: showError, success } = useNotification();
 
@@ -63,6 +71,14 @@ export const Login = () => {
 	if (isAuth) {
 		const returnPath = location?.state?.from?.pathname || '/';
 		return <Navigate to={returnPath} replace />;
+	}
+
+	if (isLoading) {
+		return (
+			<Box display="flex" justifyContent="center" mt={7}>
+				<CircularProgress />
+			</Box>
+		);
 	}
 
 	return (

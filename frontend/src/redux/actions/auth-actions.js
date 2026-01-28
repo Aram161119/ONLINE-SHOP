@@ -1,6 +1,7 @@
 import { ACTION_TYPE } from './action-type';
 import { clearCart } from './cart-actions';
 import { authApi } from '@/api';
+import { setLoading } from './set-loading';
 
 export const setUser = (user) => ({
 	type: ACTION_TYPE.SET_USER,
@@ -18,6 +19,8 @@ export const setAuthError = (message) => ({
 });
 
 export const login = (email, password) => async (dispatch) => {
+	dispatch(setLoading(true));
+
 	try {
 		const { user } = await authApi.login({ email, password });
 
@@ -26,10 +29,14 @@ export const login = (email, password) => async (dispatch) => {
 	} catch (err) {
 		dispatch(setAuthError(err?.message || 'Login failed!'));
 		throw err;
+	} finally {
+		dispatch(setLoading(false));
 	}
 };
 
 export const register = (email, password) => async (dispatch) => {
+	dispatch(setLoading(true));
+
 	try {
 		const { user } = await authApi.register({ email, password });
 
@@ -38,6 +45,8 @@ export const register = (email, password) => async (dispatch) => {
 	} catch (err) {
 		dispatch(setAuthError(err?.message || 'Register failed!'));
 		throw err;
+	} finally {
+		dispatch(setLoading(false));
 	}
 };
 

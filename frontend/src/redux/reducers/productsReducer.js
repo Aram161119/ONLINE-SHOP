@@ -5,7 +5,7 @@ const initialState = {
 	byId: {},
 	lastPage: 1,
 	error: null,
-	isLoading: true,
+	isLoading: false,
 };
 
 export const productsReducer = (state = initialState, action) => {
@@ -74,8 +74,16 @@ export const productsReducer = (state = initialState, action) => {
 				list: state.list.includes(product.id)
 					? state.list
 					: [...state.list, product.id],
+				error: null,
+				isLoading: false,
 			};
 		}
+
+		case ACTION_TYPE.SET_PRODUCT_LOADING:
+			return {
+				...state,
+				isLoading: action.payload,
+			};
 
 		case ACTION_TYPE.SET_PRODUCT_ERROR:
 			return {

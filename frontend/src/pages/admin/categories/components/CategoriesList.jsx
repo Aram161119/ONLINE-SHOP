@@ -9,15 +9,24 @@ import {
 	IconButton,
 	Typography,
 	Box,
+	CircularProgress,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { TableCell, DeleteModal } from '@/components';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectProductsError, selectCategories } from '@/redux/selectors';
+import {
+	selectProductsError,
+	selectCategories,
+	selectCategoryLoading,
+} from '@/redux/selectors';
 import { useNotification } from '@/context';
 import { useState } from 'react';
 import { removeCategory } from '@/redux/actions';
+
+const EmptyCategories = () => (
+	<Typography sx={{ textAlign: 'center', mt: 5 }}>No categories yet.</Typography>
+);
 
 export const CategoriesList = ({ filters, setFilters, onEdit }) => {
 	const [openDeleteModal, setOpenDeleteModal] = useState(false);
@@ -25,6 +34,7 @@ export const CategoriesList = ({ filters, setFilters, onEdit }) => {
 
 	const error = useSelector(selectProductsError);
 	const categories = useSelector(selectCategories);
+	const isLoading = useSelector(selectCategoryLoading);
 
 	const dispatch = useDispatch();
 
@@ -96,65 +106,67 @@ export const CategoriesList = ({ filters, setFilters, onEdit }) => {
 					overflow: 'hidden',
 				}}
 			>
-				{!categories.length ? (
-					<Typography variant="body1" sx={{ textAlign: 'center', p: 3 }}>
-						No categories found.
-					</Typography>
-				) : (
-					<>
-						<Table>
-							<TableHead>
-								<TableRow>
-									{COLUMNS.map((col) => (
-										<TableCell
-											key={col.id}
-											col={col}
-											order={order}
-											orderBy={orderBy}
-											searchValue={filters.search?.[col.id] || ''}
-											handleSortChange={handleSortChange}
-											handleSearchChange={handleSearchChange}
-										/>
-									))}
-									<MuiTableCell align="center">Actions</MuiTableCell>
-								</TableRow>
-							</TableHead>
+				<Table>
+					<TableHead>
+						<TableRow>
+							{COLUMNS.map((col) => (
+								<TableCell
+									key={col.id}
+									col={col}
+									order={order}
+									orderBy={orderBy}
+									searchValue={filters.search?.[col.id] || ''}
+									handleSortChange={handleSortChange}
+									handleSearchChange={handleSearchChange}
+								/>
+							))}
+							<MuiTableCell align="center">Actions</MuiTableCell>
+						</TableRow>
+					</TableHead>
 
-							<TableBody>
-								{categories.map((category) => (
-									<TableRow key={category.id} hover>
-										<MuiTableCell>{category.name}</MuiTableCell>
-										<MuiTableCell>{category.slug}</MuiTableCell>
-										<MuiTableCell>
-											{category.description || '-'}
-										</MuiTableCell>
-										<MuiTableCell>
-											{category.isActive ? 'Yes' : 'No'}
-										</MuiTableCell>
-										<MuiTableCell align="right">
-											<Box display={'flex'} justifyContent="center">
-												<IconButton
-													color="primary"
-													onClick={() => onEdit(category)}
-												>
-													<EditIcon />
-												</IconButton>
-												<IconButton
-													color="error"
-													onClick={() =>
-														handleOpenDeleteModal(category.id)
-													}
-												>
-													<DeleteIcon />
-												</IconButton>
-											</Box>
-										</MuiTableCell>
-									</TableRow>
-								))}
-							</TableBody>
-						</Table>
-					</>
-				)}
+					{isLoading ? (
+						<caption style={{ textAlign: 'center' }}>
+							<CircularProgress />
+						</caption>
+					) : (
+						categories.length === 0 && (
+							<caption>
+								<EmptyCategories />
+							</caption>
+						)
+					)}
+
+					<TableBody>
+						{categories.map((category) => (
+							<TableRow key={category.id} hover>
+								<MuiTableCell>{category.name}</MuiTableCell>
+								<MuiTableCell>{category.slug}</MuiTableCell>
+								<MuiTableCell>{category.description || '-'}</MuiTableCell>
+								<MuiTableCell>
+									{category.isActive ? 'Yes' : 'No'}
+								</MuiTableCell>
+								<MuiTableCell align="right">
+									<Box display={'flex'} justifyContent="center">
+										<IconButton
+											color="primary"
+											onClick={() => onEdit(category)}
+										>
+											<EditIcon />
+										</IconButton>
+										<IconButton
+											color="error"
+											onClick={() =>
+												handleOpenDeleteModal(category.id)
+											}
+										>
+											<DeleteIcon />
+										</IconButton>
+									</Box>
+								</MuiTableCell>
+							</TableRow>
+						))}
+					</TableBody>
+				</Table>
 			</TableContainer>
 
 			<DeleteModal

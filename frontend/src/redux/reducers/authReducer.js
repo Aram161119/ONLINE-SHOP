@@ -15,12 +15,18 @@ export const authReducer = (state = initialState, action) => {
 				user: { ...action.payload },
 				isAuth: true,
 				isAuthChecked: true,
+				error: null,
 			};
 		}
 		case ACTION_TYPE.LOGOUT:
-			return { user: initialState.user, isAuth: false, isAuthChecked: true };
+			return {
+				user: initialState.user,
+				isAuth: false,
+				isAuthChecked: true,
+				error: null,
+			};
 		case ACTION_TYPE.SET_AUTH_CHECKED:
-			return { ...state, isAuthChecked: action.payload };
+			return { ...state, isAuthChecked: action.payload, error: null };
 		case ACTION_TYPE.SET_AUTH_ERROR:
 			return {
 				...state,

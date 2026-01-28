@@ -5,7 +5,7 @@ const initialState = {
 	byId: {},
 	lastPage: 1,
 	error: null,
-	isLoading: true,
+	isLoading: false,
 };
 
 export const usersReducer = (state = initialState, action) => {
@@ -74,8 +74,16 @@ export const usersReducer = (state = initialState, action) => {
 				list: state.list.includes(user.id)
 					? state.list
 					: [...state.list, user.id],
+				error: null,
+				isLoading: false,
 			};
 		}
+
+		case ACTION_TYPE.SET_USER_LOADING:
+			return {
+				...state,
+				isLoading: action.payload,
+			};
 
 		case ACTION_TYPE.SET_USER_ERROR:
 			return {

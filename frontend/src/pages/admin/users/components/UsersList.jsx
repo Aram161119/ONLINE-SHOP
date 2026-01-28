@@ -65,7 +65,7 @@ export const UsersList = ({ filters, setFilters, roles }) => {
 			await dispatch(removeUser(selectedUser.id));
 			success('User deleted successfully!');
 		} catch (err) {
-			showError('Failed to delete user!');
+			showError(err?.message || 'Failed to delete user!');
 		}
 
 		handleCloseDeleteModal();
@@ -84,7 +84,7 @@ export const UsersList = ({ filters, setFilters, roles }) => {
 			success('User role updated successfully!');
 			setChangedUsers((prev) => prev.filter((u) => u.id !== userId));
 		} catch (err) {
-			showError('Failed to update user role!');
+			showError(err?.message || 'Failed to update user role!');
 		}
 	};
 
@@ -158,7 +158,7 @@ export const UsersList = ({ filters, setFilters, roles }) => {
 		},
 		{ id: 'createdAt', label: 'Created at' },
 	];
-	console.log(isLoading, users.length);
+
 	return (
 		<TableContainer
 			component={Paper}

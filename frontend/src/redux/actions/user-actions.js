@@ -26,7 +26,14 @@ export const setUserError = (message) => ({
 	payload: message,
 });
 
+export const setUserLoading = (isLoading) => ({
+	type: ACTION_TYPE.SET_USER_LOADING,
+	payload: isLoading,
+});
+
 export const fetchUsers = (filters) => async (dispatch) => {
+	dispatch(setUserLoading(true));
+
 	try {
 		const {
 			data: { lastPage, users },
@@ -35,18 +42,6 @@ export const fetchUsers = (filters) => async (dispatch) => {
 		dispatch(setUsers(users, lastPage));
 	} catch (err) {
 		dispatch(setUserError(err?.message || 'Failed to load users'));
-	}
-};
-
-export const createUser = (payload) => async (dispatch) => {
-	try {
-		const { data } = await userApi.create(payload);
-
-		dispatch(addUser(data));
-		return data;
-	} catch (err) {
-		dispatch(setUserError(err?.message || 'Failed to create user'));
-		throw err;
 	}
 };
 
@@ -62,6 +57,8 @@ export const editUser = (id, roleId) => async (dispatch) => {
 };
 
 export const removeUser = (id) => async (dispatch) => {
+	dispatch(setUserLoading(true));
+
 	try {
 		await userApi.delete(id);
 		dispatch(deleteUser(id));

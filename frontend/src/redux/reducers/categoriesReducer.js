@@ -4,6 +4,7 @@ const initialState = {
 	list: [],
 	byId: {},
 	error: null,
+	isLoading: false,
 };
 
 export const categoriesReducer = (state = initialState, action) => {
@@ -24,6 +25,7 @@ export const categoriesReducer = (state = initialState, action) => {
 				list,
 				byId,
 				error: null,
+				isLoading: false,
 			};
 		}
 
@@ -40,6 +42,7 @@ export const categoriesReducer = (state = initialState, action) => {
 					...state.byId,
 				},
 				error: null,
+				isLoading: false,
 			};
 		}
 		case ACTION_TYPE.DELETE_CATEGORY: {
@@ -52,6 +55,7 @@ export const categoriesReducer = (state = initialState, action) => {
 				list: state.list.filter((id) => id !== categoryId),
 				byId: restById,
 				error: null,
+				isLoading: false,
 			};
 		}
 
@@ -67,13 +71,22 @@ export const categoriesReducer = (state = initialState, action) => {
 				list: state.list.includes(category.id)
 					? state.list
 					: [...state.list, category.id],
+				error: null,
+				isLoading: false,
 			};
 		}
+
+		case ACTION_TYPE.SET_CATEGORY_LOADING:
+			return {
+				...state,
+				isLoading: action.payload,
+			};
 
 		case ACTION_TYPE.SET_CATEGORY_ERROR:
 			return {
 				...state,
 				error: action.payload,
+				isLoading: false,
 			};
 
 		default:

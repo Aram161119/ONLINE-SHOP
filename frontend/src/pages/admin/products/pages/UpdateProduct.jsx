@@ -30,7 +30,7 @@ import { useNotification } from '@/context';
 import { ImageUploader } from '@/components';
 import { buildFormData } from '@/builders';
 import { editProduct, fetchProductById, fetchCategories } from '@/redux/actions';
-import { selectLoading, selectCategories, selectProductById } from '@/redux/selectors';
+import { selectCategories, selectProductById } from '@/redux/selectors';
 import { PRICE_RANGE } from '@/constants';
 
 const TEXT_FIELDS = [
@@ -63,7 +63,6 @@ export const UpdateProduct = () => {
 	const navigationType = useNavigationType();
 
 	const dispatch = useDispatch();
-	const isLoading = useSelector(selectLoading);
 
 	const { error: showError, success } = useNotification();
 
@@ -131,14 +130,6 @@ export const UpdateProduct = () => {
 			showError(err.message || 'Failed to update product');
 		}
 	};
-
-	if (isLoading) {
-		return (
-			<Box display="flex" justifyContent="center" mt={7}>
-				<CircularProgress />
-			</Box>
-		);
-	}
 
 	if (!product) return null;
 

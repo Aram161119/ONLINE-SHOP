@@ -53,10 +53,13 @@ export const Users = () => {
 		resetDebouncedSearch(initialUserFilters.search);
 	};
 
-	if (rolesError)
-		<Typography color="error" variant="h6" sx={{ textAlign: 'center', mt: 5 }}>
-			{rolesError}
-		</Typography>;
+	if (rolesError) {
+		return (
+			<Typography color="error" variant="h6" sx={{ textAlign: 'center', mt: 5 }}>
+				{rolesError}
+			</Typography>
+		);
+	}
 
 	return (
 		<Container maxWidth="lg" sx={{ textAlign: 'end' }}>

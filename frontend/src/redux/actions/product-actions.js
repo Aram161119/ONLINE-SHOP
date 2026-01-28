@@ -26,7 +26,14 @@ export const setProductError = (message) => ({
 	payload: message,
 });
 
+export const setProductLoading = (isLoading) => ({
+	type: ACTION_TYPE.SET_PRODUCT_LOADING,
+	payload: isLoading,
+});
+
 export const fetchProducts = (filters) => async (dispatch) => {
+	dispatch(setProductLoading(true));
+
 	try {
 		const {
 			data: { lastPage, products },
@@ -39,6 +46,8 @@ export const fetchProducts = (filters) => async (dispatch) => {
 };
 
 export const createProduct = (payload) => async (dispatch) => {
+	dispatch(setProductLoading(true));
+
 	try {
 		const { data } = await productApi.create(payload);
 
@@ -51,6 +60,8 @@ export const createProduct = (payload) => async (dispatch) => {
 };
 
 export const editProduct = (id, payload) => async (dispatch) => {
+	dispatch(setProductLoading(true));
+
 	try {
 		const { data } = await productApi.update(id, payload);
 		dispatch(updateProduct(data));
@@ -62,6 +73,8 @@ export const editProduct = (id, payload) => async (dispatch) => {
 };
 
 export const removeProduct = (id) => async (dispatch) => {
+	dispatch(setProductLoading(true));
+
 	try {
 		await productApi.remove(id);
 		dispatch(deleteProduct(id));
@@ -78,6 +91,7 @@ export const likeAndUpdateProduct = (productId) => async (dispatch) => {
 
 		dispatch(updateProduct(updatedProduct));
 	} catch (err) {
+		dispatch(setProductError(err?.message || 'Failed to like product'));
 		throw err;
 	}
 };
@@ -89,6 +103,7 @@ export const addComment = (productId, commentText) => async (dispatch) => {
 
 		dispatch(updateProduct(updatedProduct));
 	} catch (err) {
+		dispatch(setProductError(err?.message || 'Failed to add comment'));
 		throw err;
 	}
 };
@@ -100,18 +115,22 @@ export const deleteComment = (productId, commentId) => async (dispatch) => {
 
 		dispatch(updateProduct(updatedProduct));
 	} catch (err) {
+		dispatch(setProductError(err?.message || 'Failed to delete comment'));
 		throw err;
 	}
 };
 
 export const fetchProductById = (productId) => async (dispatch, getState) => {
-	const existing = getState().products.byId[productId];
-	if (existing) return;
+	dispatch(setProductLoading(true));
 
 	try {
+		const existing = getState().products.byId[productId];
+		if (existing) return;
+
 		const { data } = await productApi.getById(productId);
 		dispatch(updateProduct(data));
-	} catch (e) {
-		throw e;
+	} catch (err) {
+		dispatch(setProductError(err?.message || 'Failed to fetch product'));
+		throw err;
 	}
 };

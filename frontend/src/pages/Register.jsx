@@ -1,12 +1,19 @@
 import { AuthFormError } from '@/components';
-import { selectIsAuth, selectAuthError } from '@/redux/selectors';
+import { selectIsAuth, selectLoading, selectAuthError } from '@/redux/selectors';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { Navigate, Link as RouterLink } from 'react-router-dom';
 import * as yup from 'yup';
 import { register as registerAction } from '@/redux/actions';
-import { Box, Button, TextField, Typography, Link } from '@mui/material';
+import {
+	Box,
+	Button,
+	TextField,
+	Typography,
+	Link,
+	CircularProgress,
+} from '@mui/material';
 import { useNotification } from '@/context';
 
 const authFormSchema = yup.object().shape({
@@ -33,6 +40,7 @@ export const Register = () => {
 
 	const isAuth = useSelector(selectIsAuth);
 	const authError = useSelector(selectAuthError);
+	const isLoading = useSelector(selectLoading);
 
 	const { error: showError, success } = useNotification();
 
@@ -65,6 +73,14 @@ export const Register = () => {
 
 	if (isAuth) {
 		return <Navigate to="/" />;
+	}
+
+	if (isLoading) {
+		return (
+			<Box display="flex" justifyContent="center" mt={7}>
+				<CircularProgress />
+			</Box>
+		);
 	}
 
 	return (
