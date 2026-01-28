@@ -10,6 +10,7 @@ router.post("/register", async (req, res) => {
   const { token, user } = await register(req.body.email, req.body.password);
 
   res
+    .status(201)
     .cookie("token", token, { httpOnly: true })
     .json({ error: null, user: mapUser(user) });
 });
@@ -18,12 +19,13 @@ router.post("/login", async (req, res) => {
   const { user, token } = await login(req.body.email, req.body.password);
 
   res
+    .status(200)
     .cookie("token", token, { httpOnly: true })
     .json({ error: null, user: mapUser(user) });
 });
 
 router.post("/logout", auth, async (req, res) => {
-  res.cookie("token", "", { httpOnly: true }).json({});
+  res.status(204).cookie("token", "", { httpOnly: true }).json({});
 });
 
 module.exports = router;

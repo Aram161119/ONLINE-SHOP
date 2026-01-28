@@ -46,7 +46,7 @@ router.put("/:id", auth, hasRole([roles.ADMIN]), async (req, res) => {
 router.delete("/:id", auth, hasRole([roles.ADMIN]), async (req, res) => {
   await deleteCategory(req.params.id);
 
-  res.status(200).json({ error: null });
+  res.status(204).json({ error: null });
 });
 
 module.exports = router;

@@ -18,7 +18,7 @@ router.post("/", auth, async (req, res) => {
   const { productId, quantity } = req.body;
   const cart = await addItemToCart(req.user.id, productId, quantity);
 
-  res.status(200).json({ data: cart, error: null });
+  res.status(201).json({ data: cart, error: null });
 });
 
 router.put("/items/:productId", auth, async (req, res) => {
@@ -35,7 +35,7 @@ router.delete("/items/:productId", auth, async (req, res) => {
 
   const cart = await deleteItemFromCart(req.user.id, productId);
 
-  res.status(200).json({ data: cart, error: null });
+  res.status(204).json({ data: cart, error: null });
 });
 
 module.exports = router;

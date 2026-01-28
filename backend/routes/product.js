@@ -24,7 +24,7 @@ router.get("/", async (req, res) => {
 
   const { products, lastPage } = await getProducts(query, sortObj, skip, limit);
 
-  res.json({
+  res.status(200).json({
     data: { lastPage, products: products?.map(mapProduct) },
     error: null,
   });
@@ -32,7 +32,7 @@ router.get("/", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
   const product = await getProduct(req.params.id);
-  res.json({ data: mapProduct(product), error: null });
+  res.status(200).json({ data: mapProduct(product), error: null });
 });
 
 router.post(
@@ -49,8 +49,8 @@ router.post(
       image: imageUrl,
     });
 
-    res.json({ data: mapProduct(newProduct), error: null });
-  }
+    res.status(201).json({ data: mapProduct(newProduct), error: null });
+  },
 );
 
 router.put(
@@ -66,13 +66,13 @@ router.put(
       image: imageUrl,
     });
 
-    res.json({ data: mapProduct(updatedProduct), error: null });
-  }
+    res.status(200).json({ data: mapProduct(updatedProduct), error: null });
+  },
 );
 
 router.delete("/:id", auth, hasRole([roles.ADMIN]), async (req, res) => {
   await deleteProduct(req.params.id, req.user);
-  res.json({ error: null });
+  res.status(204).json({ error: null });
 });
 
 router.post("/:productId/comments", auth, async (req, res) => {
@@ -80,12 +80,12 @@ router.post("/:productId/comments", auth, async (req, res) => {
     text: req.body.comment,
     author: req.user.id,
   });
-  res.json({ data: mapComment(newComment), error: null });
+  res.status(201).json({ data: mapComment(newComment), error: null });
 });
 
 router.delete("/:productId/comments/:commentId", auth, async (req, res) => {
   await deleteComment(req.params.commentId, req.params.productId, req.user.id);
-  res.json({ error: null });
+  res.status(204).json({ error: null });
 });
 
 router.post("/:productId/likes", auth, async (req, res) => {
@@ -97,7 +97,7 @@ router.post("/:productId/likes", auth, async (req, res) => {
     await addLike(req.params.productId, req.user.id);
   }
 
-  res.json({ error: null });
+  res.status(204).json({ error: null });
 });
 
 module.exports = router;

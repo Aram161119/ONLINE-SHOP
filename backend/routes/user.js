@@ -31,7 +31,7 @@ router.patch("/:id", auth, hasRole([roles.ROOT]), async (req, res) => {
 
 router.delete("/:id", auth, hasRole([roles.ROOT]), async (req, res) => {
   await deleteUser(req.params.id);
-  res.status(200).json({ error: null });
+  res.status(204).json({ error: null });
 });
 
 router.get("/roles", auth, hasRole([roles.ADMIN]), (req, res) => {
