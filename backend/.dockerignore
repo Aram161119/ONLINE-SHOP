@@ -5,6 +5,4 @@ build
 .cache
 .git
 .gitignore
-.env
-.env.*
 npm-debug.log
